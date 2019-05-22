@@ -11,10 +11,10 @@ class Game {
         document.addEventListener("button5", () => console.log('Button 5 fired'))
         document.addEventListener("button6", () => console.log('Button 6 fired'))
 
-        this.gameLoop()
+        this.update()
     }
 
-    private gameLoop() : void {
+    private update() : void {
         this.joystick.update()
 
         if(this.joystick.Left)  console.log('LEFT')
@@ -22,7 +22,7 @@ class Game {
         if(this.joystick.Up)    console.log('UP')
         if(this.joystick.Down)  console.log('Down')
         
-        requestAnimationFrame(() => this.gameLoop())
+        requestAnimationFrame(() => this.update())
     }
 
     private handleButton1Click() {

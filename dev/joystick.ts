@@ -1,6 +1,6 @@
 class Joystick {
 
-    private readonly DEBUG : boolean = true;
+    private readonly DEBUG : boolean = false;
 
     // FIELDS
     // Buttons
