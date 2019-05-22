@@ -4,6 +4,7 @@ class Game {
     constructor() {
         this.joystick = new Joystick(6)
         
+        
         document.addEventListener("button1", () => this.handleButton1Click())
         document.addEventListener("button2", () => this.jump())
         document.addEventListener("button3", () => console.log('Button 3 fired'))
