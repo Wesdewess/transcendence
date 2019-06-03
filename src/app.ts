@@ -6,8 +6,8 @@ import { EndScene } from "./scenes/end-scene"
 import { ScaleModes } from "phaser";
 
 const config: GameConfig = {
-    width: 1600,
-    height: window.innerHeight,
+    width: 1440,
+    height: 900,
     input: {
         gamepad: true
     },

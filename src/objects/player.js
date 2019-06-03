@@ -1,3 +1,5 @@
+import { loadavg } from "os";
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene) {
         super(scene, window.innerWidth / 2, 4800, "bmo");
@@ -12,7 +14,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setCollideWorldBounds(true);
         this.setBounce(0.1);
         this.setDragX(6000);
-        // this.createParticles()      
+        // this.createParticles()    
+          
     }
     createParticles() {
         var particles = this.scene.add.particles('star');
@@ -48,6 +51,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     right() {
         this.setVelocityX(1000);
+        
         this.flipX = false;
         console.log("right");
     }

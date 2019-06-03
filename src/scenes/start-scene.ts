@@ -28,16 +28,3 @@ export class StartScene extends Phaser.Scene {
     }
     
 }
-
-function gofull() {
-
-    if (this.scale.isFullScreen)
-    {
-        this.scale.stopFullScreen();
-    }
-    else
-    {
-        this.scale.startFullScreen(false);
-    }
-
-}
