@@ -4,8 +4,8 @@ import { StartScene } from "./scenes/start-scene";
 import { GameScene } from "./scenes/game-scene";
 import { EndScene } from "./scenes/end-scene";
 const config = {
-    width: 1600,
-    height: window.innerHeight,
+    width: 1440,
+    height: 900,
     input: {
         gamepad: true
     },

@@ -11,7 +11,10 @@ export class BootScene extends Phaser.Scene {
         this.load.image('bmo', require('../assets/player.png'));
         this.load.image('ice', require('../assets/platform_ice.png'));
         this.load.image('platform', require('../assets/platform_grass.png'));
-        this.load.image('ground', require('../assets/platform_ground.png'));
+        this.load.image('ground', require('../assets/Ground.png'));
+        this.load.image('goldenBanana', require('../assets/Golden_banana.png'));
+        this.load.image('badTrash1', require('../assets/banana.png'));
+        this.load.image('badTrash2', require('../assets/apple.png'));
         this.load.on('complete', () => {
             console.log("everything is loaded");
             // add code here to switch to the start scene

@@ -4,6 +4,7 @@ export class Bomb extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.add.existing(this);
         this.setBounce(0.6);
         this.setCollideWorldBounds(true);
+        this.scene.add.existing(this);
         this.setVelocity(Phaser.Math.Between(-200, 200), 30);
         this.setAngularVelocity(30);
     }
