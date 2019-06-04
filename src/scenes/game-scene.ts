@@ -62,7 +62,7 @@ export class GameScene extends Phaser.Scene {
 
         // TODO add player
         this.player = new Player(this)
-        
+        this.player.setScale(1.5)
         
         this.platforms = this.add.group({ runChildUpdate: true })
         this.badItems = this.add.group({runChildUpdate: true})

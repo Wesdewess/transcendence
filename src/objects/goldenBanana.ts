@@ -4,7 +4,7 @@ export class goldenBanana extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, "goldenBanana")
 
         this.scene.physics.add.existing(this)
-
+        this.setScale(1.5)
         this.setBounce(0)
         this.setCollideWorldBounds(false)
         this.scene.add.existing(this)
