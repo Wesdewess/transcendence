@@ -32,7 +32,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.registry.set("health", 10)
         this.scene.registry.set("charge", 0)
 
-        setInterval(()=> this.updateHealth(),100)
+        
     }
 private createParticles(){
     var particles = this.scene.add.particles('star');

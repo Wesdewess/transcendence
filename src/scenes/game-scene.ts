@@ -117,7 +117,9 @@ export class GameScene extends Phaser.Scene {
         console.log(this.cameras.main.getWorldPoint(0,0))
 
         this.countdown()
-        setInterval(()=> this.updateScore(),100)
+
+        this.updateScore()
+        this.player.updateHealth()
 
     }
 
@@ -199,7 +201,7 @@ export class GameScene extends Phaser.Scene {
         this.player.health--
         this.badItems.remove(item, true, true)
         this.bounceItems.remove(item, true, true)
-
+        this.player.updateHealth()
         if(this.player.health<1){
             clearInterval(this.dropInterval)
             clearInterval(this.player.interval)
@@ -211,6 +213,7 @@ export class GameScene extends Phaser.Scene {
     pickupCharge(item){
         this.chargeItems.remove(item, true, true)
         this.player.pickUpCharge()
+        this.updateScore()
 
     }
 }
