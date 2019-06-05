@@ -4,7 +4,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     
     private cursors: Phaser.Input.Keyboard.CursorKeys
     charging: boolean
-    charge = 90
+    charge = 0
     maxInterval = 200
     lastChargePress: integer
     gamepad: Gamepad

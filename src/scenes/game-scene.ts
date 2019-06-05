@@ -55,24 +55,29 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
-        //this.add.image(0, 0, 'sky').setOrigin(0, 0)      
         
-        // 11 STARS
-        // this.stars = this.physics.add.group({
-        //     key: 'star',
-        //     repeat: 11,
-        //     setXY: { x: 12, y: 30, stepX: 70 },
-        // })
 
-        // TODO add player
-        this.player = new Player(this)
-        this.player.setScale(1.5)
-        
         this.platforms = this.add.group({ runChildUpdate: true })
         this.badItems = this.add.group({runChildUpdate: true})
         this.chargeItems = this.add.group({runChildUpdate: true})
         this.bounceItems = this.add.group({runChildUpdate: true})
         
+        this.platforms.addMultiple([
+            //stage 2 floor
+            new Platform(this, 0, 4390, 'ground', 1),
+            new Platform(this, 150, 4390, 'ground', 1),
+            new Platform(this, 300, 4390, 'ground', 1),
+            new Platform(this, 450, 4390, 'ground', 1),
+            new Platform(this, 600, 4390, 'ground', 1),
+            new Platform(this, 750, 4390, 'ground', 1),
+            new Platform(this, 900, 4390, 'ground', 1),
+            new Platform(this, 1050, 4390, 'ground', 1),
+            new Platform(this, 1200, 4390, 'ground', 1),
+            new Platform(this, 1350, 4390, 'ground', 1)
+        ], true)
+        this.add.image(0, 2000, 'sky').setOrigin(0, 0)
+        this.player = new Player(this)
+        this.player.setScale(1.5)
         this.platforms.addMultiple([
             //stage 1 floor
             new Platform(this, 0, 4990, 'ground', 1),
@@ -86,19 +91,7 @@ export class GameScene extends Phaser.Scene {
             new Platform(this, 1200, 4990, 'ground', 1),
             new Platform(this, 1350, 4990, 'ground', 1),
             
-            //stage 2 floor
-            new Platform(this, 0, 4390, 'ground', 1),
-            new Platform(this, 150, 4390, 'ground', 1),
-            new Platform(this, 300, 4390, 'ground', 1),
-            new Platform(this, 450, 4390, 'ground', 1),
-            new Platform(this, 600, 4390, 'ground', 1),
-            new Platform(this, 750, 4390, 'ground', 1),
-            new Platform(this, 900, 4390, 'ground', 1),
-            new Platform(this, 1050, 4390, 'ground', 1),
-            new Platform(this, 1200, 4390, 'ground', 1),
-            new Platform(this, 1350, 4390, 'ground', 1)
         ], true)
-        
         //define collisions for bouncing, and overlaps for pickups
         //this.physics.add.collider(this.stars, this.platforms)
         this.physics.add.collider(this.player, this.platforms)
@@ -139,7 +132,7 @@ export class GameScene extends Phaser.Scene {
         }, 3000);
         setTimeout(() => {
             text.destroy()
-            this.dropInterval = setInterval(()=>this.dropTrash(),3000)
+            this.dropInterval = setInterval(()=>this.dropTrash(),1000)
         }, 4000);
         
     }
@@ -189,15 +182,17 @@ export class GameScene extends Phaser.Scene {
         let w = Math.random()*1430
         let drop = Math.random()*100
         if(drop<65){
-            if(Math.random()){
-                this.badItems.add(new BadTrash(this,w,4190))
-            }
+            if(Math.random()<0.5){
+                this.badItems.add(new BadTrash(this,w,4150))
+            }else{
             this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (4900 - 4300) + 4300))
+            }
         }else{
-            this.chargeItems.add(new goldenBanana(this,w,4190))
+            this.chargeItems.add(new goldenBanana(this,w,4100))
         }
     }
     hurtPlayer(item){
+        this.cameras.main.flash(300, 255,0,0)
         this.player.health--
         this.badItems.remove(item, true, true)
         this.bounceItems.remove(item, true, true)
@@ -215,5 +210,18 @@ export class GameScene extends Phaser.Scene {
         this.player.pickUpCharge()
         this.updateScore()
 
+        var particles = this.add.particles('star');
+
+        var emitter = particles.createEmitter({
+            x: item.x,
+            y: item.y,
+            speed: 500,
+            
+            scale: { start: 0.5, end: 1 },
+        });
+
+        setTimeout(() => {
+            particles.destroy()
+        }, 1000);
     }
 }
