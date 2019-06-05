@@ -8,6 +8,7 @@ import {Joystick} from "../objects/arcade/input/joystick"
 import { Bomb } from "../objects/bomb";
 import { BadTrash } from "../objects/badTrash";
 import { goldenBanana } from "../objects/goldenBanana";
+import { bouncingTrash } from "../objects/bouncingTrash";
 import { all } from "q";
 
 export class GameScene extends Phaser.Scene {
@@ -18,6 +19,7 @@ export class GameScene extends Phaser.Scene {
     private platforms: Phaser.GameObjects.Group
     private badItems: Phaser.GameObjects.Group
     private chargeItems: Phaser.GameObjects.Group
+    private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
     dropInterval
     hasDestroyed = false
@@ -67,6 +69,7 @@ export class GameScene extends Phaser.Scene {
         this.platforms = this.add.group({ runChildUpdate: true })
         this.badItems = this.add.group({runChildUpdate: true})
         this.chargeItems = this.add.group({runChildUpdate: true})
+        this.bounceItems = this.add.group({runChildUpdate: true})
         
         this.platforms.addMultiple([
             //stage 1 floor
@@ -97,9 +100,11 @@ export class GameScene extends Phaser.Scene {
         //define collisions for bouncing, and overlaps for pickups
         //this.physics.add.collider(this.stars, this.platforms)
         this.physics.add.collider(this.player, this.platforms)
+        this.physics.add.collider(this.bounceItems, this.platforms)
         
         
         this.physics.add.overlap(this.badItems, this.player, this.hurtPlayer, null, this)
+        this.physics.add.overlap(this.bounceItems, this.player, this.hurtPlayer, null, this)
         this.physics.add.overlap(this.chargeItems, this.player, this.pickupCharge, null, this)
 
         this.cameras.main.setSize(1440, 800)
@@ -111,7 +116,7 @@ export class GameScene extends Phaser.Scene {
 
         this.dropTrash()
 
-        this.dropInterval = setInterval(()=>this.dropTrash(),300)
+        this.dropInterval = setInterval(()=>this.dropTrash(),3000)
         
     }
 
@@ -133,6 +138,7 @@ export class GameScene extends Phaser.Scene {
             
             this.badItems.clear()
             this.chargeItems.clear()
+            this.bounceItems.clear()
             this.hasDestroyed = true
             console.log("remaining items destroyed")
         }
@@ -151,15 +157,20 @@ export class GameScene extends Phaser.Scene {
     dropTrash(){
         let w = Math.random()*1430
         let drop = Math.random()*100
-        if(drop<75){
-            this.badItems.add(new BadTrash(this,w,4190))
+        if(drop<65){
+            if(Math.random()){
+                this.badItems.add(new BadTrash(this,w,4190))
+            }
+            this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (4900 - 4300) + 4300))
         }else{
             this.chargeItems.add(new goldenBanana(this,w,4190))
         }
     }
     hurtPlayer(item){
-        this.player.health = this.player.health - 1
+        this.player.health--
         this.badItems.remove(item, true, true)
+        this.bounceItems.remove(item, true, true)
+
         if(this.player.health<1){
             clearInterval(this.dropInterval)
             clearInterval(this.player.interval)

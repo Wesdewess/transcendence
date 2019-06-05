@@ -20,6 +20,7 @@ export class BootScene extends Phaser.Scene {
         this.load.image('goldenBanana', require('../assets/Golden_banana.png'))
         this.load.image('badTrash1', require('../assets/banana.png'))
         this.load.image('badTrash2', require('../assets/apple.png'))
+        this.load.image('badTrash3', require('../assets/Bleach.png'))
 
         this.load.on('complete', () => {
             console.log("everything is loaded")
