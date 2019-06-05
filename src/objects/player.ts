@@ -4,7 +4,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     
     private cursors: Phaser.Input.Keyboard.CursorKeys
     charging: boolean
-    charge = 0
+    charge = 90
     maxInterval = 200
     lastChargePress: integer
     gamepad: Gamepad
@@ -12,6 +12,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     d: number
     interval
     health=3
+    chargeText
 
     constructor(scene) {
         super(scene, window.innerWidth/2, 4800, "bmo")
@@ -51,6 +52,7 @@ private createParticles(){
     public update(): void {
         if(this.charge >= 100){
             console.log("charge has reached 100")
+            this.chargeText = this.scene.add.text(700, 4700, 'Start charging!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
             this.charging = true
             this.charge = 0
         }
@@ -103,6 +105,7 @@ private createParticles(){
     chargeJump(){ 
         this.d = new Date().getTime()
         if(this.charging == true){
+            
             if(this.lastChargePress + this.maxInterval > this.d && this.charge<100){
                 console.log("charging")
                 this.charge = this.charge + 10
@@ -115,6 +118,7 @@ private createParticles(){
                 this.scene.cameras.main.setFollowOffset(0,200)
                 this.setVelocityY(-2000)
                 console.log("WOOOOSHHHH!!!!")
+                this.chargeText.destroy()
                 this.charging = false
                 this.charge = 0
                 this.interval = setInterval(()=>{

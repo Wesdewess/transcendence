@@ -21,6 +21,8 @@ export class GameScene extends Phaser.Scene {
     private chargeItems: Phaser.GameObjects.Group
     private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
+    scoreText
+    
     dropInterval
     hasDestroyed = false
 
@@ -114,13 +116,31 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.stopFollow()
         console.log(this.cameras.main.getWorldPoint(0,0))
 
-        this.dropTrash()
+        this.countdown()
+        setInterval(()=> this.updateScore(),20)
 
-        this.dropInterval = setInterval(()=>this.dropTrash(),3000)
-        
     }
 
-    
+    countdown(){
+        let text = this.add.text(700, 4700, 'Get ready!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        setTimeout(() => {
+            text.destroy()
+            text = this.add.text(700, 4700, '3', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        }, 1000);
+        setTimeout(() => {
+            text.destroy()
+            text = this.add.text(700, 4700, '2', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        }, 2000);
+        setTimeout(() => {
+            text.destroy()
+            text = this.add.text(700, 4700, '1', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        }, 3000);
+        setTimeout(() => {
+            text.destroy()
+            this.dropInterval = setInterval(()=>this.dropTrash(),3000)
+        }, 4000);
+        
+    }
 
     private collectStar(player : Player , star) : void {
         this.stars.remove(star, true, true)
@@ -134,7 +154,6 @@ export class GameScene extends Phaser.Scene {
         
         if(this.player.charging && this.hasDestroyed == false){
             clearInterval(this.dropInterval)
-            
             
             this.badItems.clear()
             this.chargeItems.clear()
@@ -152,6 +171,16 @@ export class GameScene extends Phaser.Scene {
             if(joystick.Down)  this.player.down()
             
         }
+        
+    }
+
+    updateScore(){
+        try{
+        this.scoreText.destroy()
+        }catch(e){
+
+        }
+        this.scoreText = this.add.text(1300, 4300, ''+this.player.charge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
     }
 
     dropTrash(){
