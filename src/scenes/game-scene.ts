@@ -117,7 +117,7 @@ export class GameScene extends Phaser.Scene {
         console.log(this.cameras.main.getWorldPoint(0,0))
 
         this.countdown()
-        setInterval(()=> this.updateScore(),20)
+        setInterval(()=> this.updateScore(),100)
 
     }
 

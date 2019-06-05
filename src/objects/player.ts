@@ -13,6 +13,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     interval
     health=3
     chargeText
+    healthText
 
     constructor(scene) {
         super(scene, window.innerWidth/2, 4800, "bmo")
@@ -30,6 +31,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.spacebar = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    
         this.scene.registry.set("health", 10)
         this.scene.registry.set("charge", 0)
+
+        setInterval(()=> this.updateHealth(),100)
     }
 private createParticles(){
     var particles = this.scene.add.particles('star');
@@ -50,6 +53,9 @@ private createParticles(){
         emitter.startFollow(this)
 }
     public update(): void {
+
+        
+
         if(this.charge >= 100){
             console.log("charge has reached 100")
             this.chargeText = this.scene.add.text(700, 4700, 'Start charging!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
@@ -70,6 +76,15 @@ private createParticles(){
             this.chargeJump()
         }
         
+    }
+
+    updateHealth(){
+        try{
+            this.healthText.destroy()
+            }catch(e){
+    
+            }
+            this.healthText = this.scene.add.text(150, 4300, ''+this.health, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
     }
 
     left(){
