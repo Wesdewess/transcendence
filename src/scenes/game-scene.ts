@@ -22,9 +22,12 @@ export class GameScene extends Phaser.Scene {
     private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
     scoreText
-    
+    levels = [4990,4420,3820]
+    currentLevel = 0
+    public currentHeight = this.levels[0]
     dropInterval
     hasDestroyed = false
+    healthText
 
     constructor() {
         super({ key: "GameScene" })
@@ -56,40 +59,51 @@ export class GameScene extends Phaser.Scene {
 
     create(): void {
         
-
         this.platforms = this.add.group({ runChildUpdate: true })
         this.badItems = this.add.group({runChildUpdate: true})
         this.chargeItems = this.add.group({runChildUpdate: true})
         this.bounceItems = this.add.group({runChildUpdate: true})
         
         this.platforms.addMultiple([
+            //stage 3 floor
+            new Platform(this, 0, this.levels[2], 'ground', 1),
+            new Platform(this, 150, this.levels[2], 'ground', 1),
+            new Platform(this, 300, this.levels[2], 'ground', 1),
+            new Platform(this, 450, this.levels[2], 'ground', 1),
+            new Platform(this, 600, this.levels[2], 'ground', 1),
+            new Platform(this, 750, this.levels[2], 'ground', 1),
+            new Platform(this, 900, this.levels[2], 'ground', 1),
+            new Platform(this, 1050, this.levels[2], 'ground', 1),
+            new Platform(this, 1200, this.levels[2], 'ground', 1),
+            new Platform(this, 1350, this.levels[2], 'ground', 1),
             //stage 2 floor
-            new Platform(this, 0, 4390, 'ground', 1),
-            new Platform(this, 150, 4390, 'ground', 1),
-            new Platform(this, 300, 4390, 'ground', 1),
-            new Platform(this, 450, 4390, 'ground', 1),
-            new Platform(this, 600, 4390, 'ground', 1),
-            new Platform(this, 750, 4390, 'ground', 1),
-            new Platform(this, 900, 4390, 'ground', 1),
-            new Platform(this, 1050, 4390, 'ground', 1),
-            new Platform(this, 1200, 4390, 'ground', 1),
-            new Platform(this, 1350, 4390, 'ground', 1)
+            new Platform(this, 0, this.levels[1], 'ground', 1),
+            new Platform(this, 150, this.levels[1], 'ground', 1),
+            new Platform(this, 300, this.levels[1], 'ground', 1),
+            new Platform(this, 450, this.levels[1], 'ground', 1),
+            new Platform(this, 600, this.levels[1], 'ground', 1),
+            new Platform(this, 750, this.levels[1], 'ground', 1),
+            new Platform(this, 900, this.levels[1], 'ground', 1),
+            new Platform(this, 1050, this.levels[1], 'ground', 1),
+            new Platform(this, 1200, this.levels[1], 'ground', 1),
+            new Platform(this, 1350, this.levels[1], 'ground', 1)
         ], true)
         this.add.image(0, 2000, 'sky').setOrigin(0, 0)
         this.player = new Player(this)
         this.player.setScale(1.5)
+        
         this.platforms.addMultiple([
             //stage 1 floor
-            new Platform(this, 0, 4990, 'ground', 1),
-            new Platform(this, 150, 4990, 'ground', 1),
-            new Platform(this, 300, 4990, 'ground', 1),
-            new Platform(this, 450, 4990, 'ground', 1),
-            new Platform(this, 600, 4990, 'ground', 1),
-            new Platform(this, 750, 4990, 'ground', 1),
-            new Platform(this, 900, 4990, 'ground', 1),
-            new Platform(this, 1050, 4990, 'ground', 1),
-            new Platform(this, 1200, 4990, 'ground', 1),
-            new Platform(this, 1350, 4990, 'ground', 1),
+            new Platform(this, 0, this.levels[0], 'ground', 1),
+            new Platform(this, 150, this.levels[0], 'ground', 1),
+            new Platform(this, 300, this.levels[0], 'ground', 1),
+            new Platform(this, 450, this.levels[0], 'ground', 1),
+            new Platform(this, 600, this.levels[0], 'ground', 1),
+            new Platform(this, 750, this.levels[0], 'ground', 1),
+            new Platform(this, 900, this.levels[0], 'ground', 1),
+            new Platform(this, 1050, this.levels[0], 'ground', 1),
+            new Platform(this, 1200, this.levels[0], 'ground', 1),
+            new Platform(this, 1350, this.levels[0], 'ground', 1),
             
         ], true)
         //define collisions for bouncing, and overlaps for pickups
@@ -112,7 +126,7 @@ export class GameScene extends Phaser.Scene {
         this.countdown()
 
         this.updateScore()
-        this.player.updateHealth()
+        this.updateHealth()
 
     }
 
@@ -155,6 +169,11 @@ export class GameScene extends Phaser.Scene {
             this.bounceItems.clear()
             this.hasDestroyed = true
             console.log("remaining items destroyed")
+            this.currentLevel++
+            this.currentHeight=this.levels[this.currentLevel]
+            this.updateHealth()
+            this.updateScore()
+            this.dropInterval = setInterval(()=>{this.checkForJump()},100)
         }
         this.player.update()
         for(let joystick of this.arcade.Joysticks){
@@ -169,13 +188,30 @@ export class GameScene extends Phaser.Scene {
         
     }
 
+    checkForJump(){
+        if(this.player.y<this.currentHeight){
+            clearInterval(this.dropInterval)
+            this.dropInterval = setInterval(()=>this.dropTrash(),1000)
+            this.hasDestroyed = false
+        }
+
+    }
+
     updateScore(){
         try{
         this.scoreText.destroy()
         }catch(e){
 
         }
-        this.scoreText = this.add.text(1300, 4300, ''+this.player.charge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+    }
+    updateHealth(){
+        try{
+            this.healthText.destroy()
+            }catch(e){
+    
+            }
+            this.healthText = this.add.text(150, this.currentHeight-640, ''+this.player.health, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
     }
 
     dropTrash(){
@@ -183,12 +219,12 @@ export class GameScene extends Phaser.Scene {
         let drop = Math.random()*100
         if(drop<65){
             if(Math.random()<0.5){
-                this.badItems.add(new BadTrash(this,w,4150))
+                this.badItems.add(new BadTrash(this,w,this.currentHeight-800))
             }else{
-            this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (4900 - 4300) + 4300))
+            this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (this.currentHeight-90 - this.currentHeight-500) + this.currentHeight-600))
             }
         }else{
-            this.chargeItems.add(new goldenBanana(this,w,4100))
+            this.chargeItems.add(new goldenBanana(this,w,this.currentHeight-890))
         }
     }
     hurtPlayer(item){
@@ -196,7 +232,7 @@ export class GameScene extends Phaser.Scene {
         this.player.health--
         this.badItems.remove(item, true, true)
         this.bounceItems.remove(item, true, true)
-        this.player.updateHealth()
+        this.updateHealth()
         if(this.player.health<1){
             clearInterval(this.dropInterval)
             clearInterval(this.player.interval)

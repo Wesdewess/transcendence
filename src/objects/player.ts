@@ -1,10 +1,11 @@
 import { delay } from "q";
 
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     
     private cursors: Phaser.Input.Keyboard.CursorKeys
     charging: boolean
-    charge = 0
+    charge = 90
     maxInterval = 200
     lastChargePress: integer
     gamepad: Gamepad
@@ -13,7 +14,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     interval
     health=3
     chargeText
-    healthText
+    
 
     constructor(scene) {
         super(scene, window.innerWidth/2, 4800, "bmo")
@@ -58,7 +59,7 @@ private createParticles(){
 
         if(this.charge >= 100){
             console.log("charge has reached 100")
-            this.chargeText = this.scene.add.text(700, 4700, 'Start charging!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+            this.chargeText = this.scene.add.text(700, 4000, 'Start charging!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
             this.charging = true
             this.charge = 0
         }
@@ -78,14 +79,7 @@ private createParticles(){
         
     }
 
-    updateHealth(){
-        try{
-            this.healthText.destroy()
-            }catch(e){
     
-            }
-            this.healthText = this.scene.add.text(150, 4300, ''+this.health, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
-    }
 
     left(){
         this.setVelocityX(-1000)
@@ -107,7 +101,7 @@ private createParticles(){
     }
     jump(){
         if (this.body.touching.down) {
-            this.setVelocityY(-1200)
+            this.setVelocityY(-1300)
             
         }
     }
@@ -141,6 +135,7 @@ private createParticles(){
                     if(this.body.touching.down && t > this.d+100){
                         this.scene.cameras.main.stopFollow()
                         clearInterval(this.interval)
+                        
                     }
                 },10)
                 
