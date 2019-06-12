@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
     private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
     scoreText
-    levels = [4990,4420,3820]
+    levels = [4990,4420,3780]
     currentLevel = 0
     public currentHeight = this.levels[0]
     dropInterval
@@ -203,7 +203,7 @@ export class GameScene extends Phaser.Scene {
         }catch(e){
 
         }
-        this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge + '/'+ this.player.maxCharge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
     }
     updateHealth(){
         try{
