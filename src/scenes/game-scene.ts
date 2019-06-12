@@ -221,7 +221,7 @@ export class GameScene extends Phaser.Scene {
             if(Math.random()<0.5){
                 this.badItems.add(new BadTrash(this,w,this.currentHeight-800))
             }else{
-            this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (this.currentHeight-90 - this.currentHeight-500) + this.currentHeight-600))
+            this.bounceItems.add(new bouncingTrash(this,Math.random() < 0.5 ? -50 : 1500,Math.random() * (this.currentHeight-90 - this.currentHeight-300) + this.currentHeight-300))
             }
         }else{
             this.chargeItems.add(new goldenBanana(this,w,this.currentHeight-890))
