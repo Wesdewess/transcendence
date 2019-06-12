@@ -237,8 +237,8 @@ export class GameScene extends Phaser.Scene {
             clearInterval(this.dropInterval)
             clearInterval(this.player.interval)
             console.log("your charge was: " + this.player.charge)
-            this.scene.stop
-            this.scene.start("StartScene")
+            location.reload()
+            //this.scene.start("StartScene")
             console.log("u deeeeeeaaadd!!")
         }
     }
