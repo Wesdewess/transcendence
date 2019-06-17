@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
     private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
     scoreText
-    levels = [4990,4420,3780]
+    levels = [4990,4420,3780,3120]
     currentLevel = 0
     public currentHeight = this.levels[0]
     dropInterval
@@ -65,6 +65,17 @@ export class GameScene extends Phaser.Scene {
         this.bounceItems = this.add.group({runChildUpdate: true})
         
         this.platforms.addMultiple([
+            //stage 4 floor
+            new Platform(this, 0, this.levels[3], 'ground', 1),
+            new Platform(this, 150, this.levels[3], 'ground', 1),
+            new Platform(this, 300, this.levels[3], 'ground', 1),
+            new Platform(this, 450, this.levels[3], 'ground', 1),
+            new Platform(this, 600, this.levels[3], 'ground', 1),
+            new Platform(this, 750, this.levels[3], 'ground', 1),
+            new Platform(this, 900, this.levels[3], 'ground', 1),
+            new Platform(this, 1050, this.levels[3], 'ground', 1),
+            new Platform(this, 1200, this.levels[3], 'ground', 1),
+            new Platform(this, 1350, this.levels[3], 'ground', 1),
             //stage 3 floor
             new Platform(this, 0, this.levels[2], 'ground', 1),
             new Platform(this, 150, this.levels[2], 'ground', 1),
@@ -89,7 +100,7 @@ export class GameScene extends Phaser.Scene {
             new Platform(this, 1350, this.levels[1], 'ground', 1)
         ], true)
         this.add.image(0, 2000, 'sky').setOrigin(0, 0)
-        this.player = new Player(this)
+        this.player = new Player(this, 4800)
         this.player.setScale(1.5)
         
         this.platforms.addMultiple([
@@ -163,7 +174,6 @@ export class GameScene extends Phaser.Scene {
         
         if(this.player.charging && this.hasDestroyed == false){
             clearInterval(this.dropInterval)
-            
             this.badItems.clear()
             this.chargeItems.clear()
             this.bounceItems.clear()
@@ -175,7 +185,9 @@ export class GameScene extends Phaser.Scene {
             this.updateScore()
             this.dropInterval = setInterval(()=>{this.checkForJump()},100)
         }
+
         this.player.update()
+
         for(let joystick of this.arcade.Joysticks){
             joystick.update()
             // example: read directions as true / false
@@ -184,6 +196,15 @@ export class GameScene extends Phaser.Scene {
             if(joystick.Up)    this.player.up()
             if(joystick.Down)  this.player.down()
             
+        }
+
+        if(this.player.y < this.levels[this.levels.length-1]){
+            clearInterval(this.player.interval)
+            clearInterval(this.dropInterval)
+            //this.scene.stop("GameScene")
+            console.log("1")
+            this.scene.start("BossScene")
+            console.log("2")
         }
         
     }
