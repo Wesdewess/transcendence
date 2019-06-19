@@ -5,8 +5,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     
     private cursors: Phaser.Input.Keyboard.CursorKeys
     charging: boolean
+    shotCharging: boolean
     charge = 0
+    shotCharge = 0
     maxCharge = 20
+    maxShotcharge = 30
     maxInterval = 200
     lastChargePress: integer
     gamepad: Gamepad
@@ -16,6 +19,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     health=3
     chargeText
     jumpCharge
+    protected scene
     
 
     constructor(scene, y, x = window.innerWidth/2) {
@@ -23,7 +27,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.lastChargePress = new Date().getTime()
         //debug
         this.charging = false
-
+        this.scene = scene
         this.cursors = this.scene.input.keyboard.createCursorKeys()
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
@@ -66,6 +70,13 @@ private createParticles(){
             console.log(this.x)
             this.charge = 0
         }
+
+        if(this.shotCharge >= this.maxShotcharge){
+            console.log(" shot charge has reached 100")
+            this.chargeText = this.scene.add.text(700, this.y-100, 'Charge to shoot!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+            this.shotCharging = true
+            this.shotCharge = 0
+        }
         
         if (this.cursors.left.isDown) {
             this.left()
@@ -104,7 +115,7 @@ private createParticles(){
     }
     jump(){
         if (this.body.touching.down) {
-            this.setVelocityY(-1300)
+            this.setVelocityY(-1400)
             
         }
     }
@@ -112,6 +123,10 @@ private createParticles(){
     pickUpCharge(){
         this.charge += 10
         console.log("picked up a charge, you now have: " + this.charge)
+    }
+    
+    chargeShot(){
+        this.shotCharge+=10
     }
 
     chargeJump(){ 
@@ -147,6 +162,21 @@ private createParticles(){
            }
            
         }
+        if(this.shotCharging==true){
+            console.log("yeet")
+            this.chargeShoot()
+        }
+    }
+
+    chargeShoot(){
+            this.chargeText.destroy()
+            this.shotCharging = false
+            this.shotCharge=0
+            this.jumpCharge = 0
+            this.scene.playerShoot()
+            console.log("SHOOOOOTTTTT!!!!!!!!!!!!!!!")
+       }
+
     }
 
    

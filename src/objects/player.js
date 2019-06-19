@@ -1,7 +1,8 @@
 export class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene) {
-        super(scene, window.innerWidth / 2, 4800, "bmo");
+    constructor(scene, y, x = window.innerWidth / 2) {
+        super(scene, x, y, "bmo");
         this.charge = 0;
+        this.maxCharge = 20;
         this.maxInterval = 200;
         this.health = 3;
         this.lastChargePress = new Date().getTime();
@@ -34,9 +35,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         emitter.startFollow(this);
     }
     update() {
-        if (this.charge >= 100) {
+        if (this.charge >= this.maxCharge) {
             console.log("charge has reached 100");
+            this.chargeText = this.scene.add.text(700, this.y - 100, 'Start charging!', { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16);
             this.charging = true;
+            console.log(this.x);
             this.charge = 0;
         }
         if (this.cursors.left.isDown) {
@@ -69,30 +72,32 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     jump() {
         if (this.body.touching.down) {
-            this.setVelocityY(-1200);
+            this.setVelocityY(-1300);
         }
     }
     pickUpCharge() {
-        this.charge = this.charge + 10;
+        this.charge += 10;
         console.log("picked up a charge, you now have: " + this.charge);
     }
     chargeJump() {
         this.d = new Date().getTime();
         if (this.charging == true) {
-            if (this.lastChargePress + this.maxInterval > this.d && this.charge < 100) {
+            if (this.lastChargePress + this.maxInterval > this.d && this.jumpCharge < 100) {
                 console.log("charging");
-                this.charge = this.charge + 10;
+                this.jumpCharge += 10;
             }
             else {
-                this.charge = 10;
+                this.jumpCharge = 10;
             }
             this.lastChargePress = this.d;
-            if (this.charge == 100) {
+            if (this.jumpCharge == 100) {
                 this.scene.cameras.main.startFollow(this);
                 this.scene.cameras.main.setFollowOffset(0, 200);
-                this.setVelocityY(-2000);
+                this.setVelocityY(-2100);
                 console.log("WOOOOSHHHH!!!!");
+                this.chargeText.destroy();
                 this.charging = false;
+                this.jumpCharge = 0;
                 this.charge = 0;
                 this.interval = setInterval(() => {
                     let t = new Date().getTime();

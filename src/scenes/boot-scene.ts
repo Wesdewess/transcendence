@@ -1,3 +1,4 @@
+
 export class BootScene extends Phaser.Scene {
 
     private graphics: Phaser.GameObjects.Graphics
@@ -21,13 +22,14 @@ export class BootScene extends Phaser.Scene {
         this.load.image('badTrash1', require('../assets/banana.png'))
         this.load.image('badTrash2', require('../assets/apple.png'))
         this.load.image('badTrash3', require('../assets/Bleach.png'))
+        this.load.image('boss', require('../assets/Gemene_man.png'))
         this.load.image('spark', 'assets/star.png');//particle
 
         this.load.on('complete', () => {
             console.log("everything is loaded")
             // add code here to switch to the start scene
             
-            this.scene.start("StartScene")
+            this.scene.start("GameScene")
         })
     }
 }

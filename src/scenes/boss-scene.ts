@@ -1,4 +1,5 @@
 import { Player } from "../objects/player"
+import { Boss } from "../objects/boss"
 import { Platform } from "../objects/platform"
 import { MovingPlatform } from "../objects/movingplatform"
 import { platform } from "os";
@@ -7,7 +8,7 @@ import {Arcade} from "../objects/arcade/arcade"
 import {Joystick} from "../objects/arcade/input/joystick"
 import { Bomb } from "../objects/bomb";
 import { BadTrash } from "../objects/badTrash";
-import { goldenBanana } from "../objects/goldenBanana";
+import { throwBanana } from "../objects/throwBanana";
 import { bouncingTrash } from "../objects/bouncingTrash";
 import { all } from "q";
 
@@ -16,15 +17,16 @@ export class BossScene extends Phaser.Scene {
     private joystickListener: EventListener
     joystick: Joystick
     private player : Player
+    private Boss : Boss
     private platforms: Phaser.GameObjects.Group
     private badItems: Phaser.GameObjects.Group
     private chargeItems: Phaser.GameObjects.Group
-    private bounceItems: Phaser.GameObjects.Group
+    public bounceItems: Phaser.GameObjects.Group
 
     constructor() {
         super({key: "BossScene"})
         console.log("loading boss scene")
-        this.player = new Player(this,400,100)
+        
         
     }
 
@@ -37,13 +39,113 @@ export class BossScene extends Phaser.Scene {
     }
 
     create(): void {
-        // change this to a nice game over image
-
         this.add.image(0, 0, 'sky').setOrigin(0, 0)
+        
+        this.player = new Player(this,400,100)
+        this.player.setScale(1.5)
+        this.Boss = new Boss(this, 100,1000)
+        this.platforms = this.add.group({ runChildUpdate: true })
+        this.platforms.addMultiple([
+            //stage 1 floor
+            new Platform(this, 0, 790, 'ground', 1),
+            new Platform(this, 150, 790, 'ground', 1),
+            new Platform(this, 300, 790, 'ground', 1),
+            new Platform(this, 450, 790, 'ground', 1),
+            new Platform(this, 600, 790, 'ground', 1),
+            new Platform(this, 750, 790, 'ground', 1),
+            new Platform(this, 900, 790, 'ground', 1),
+            new Platform(this, 1050, 790, 'ground', 1),
+            new Platform(this, 1200, 790, 'ground', 1),
+            new Platform(this, 1350, 790, 'ground', 1),
+            
+        ], true)
+        this.physics.add.collider(this.player, this.platforms)
+        this.physics.add.collider(this.Boss, this.platforms)
+        this.chargeItems = this.add.group({runChildUpdate: true})
+        this.badItems = this.add.group({runChildUpdate: true})
+        this.bounceItems = this.add.group({runChildUpdate: true})
+        this.physics.add.collider(this.bounceItems, this.player)
+        this.physics.add.collider(this.bounceItems, this.platforms)
+        this.physics.add.overlap(this.badItems, this.player, this.hurtPlayer, null, this)
+        this.physics.add.overlap(this.bounceItems, this.player, this.hurtPlayer, null, this)
+        this.physics.add.overlap(this.chargeItems, this.player, this.pickupCharge, null, this)
 
         this.cameras.main.setSize(1440, 800)
         this.cameras.main.setBounds(0,0,1440,800)
         this.cameras.main.startFollow(this.player)
+        //this.cameras.main.shake(100)
 
     }
+
+    update(){
+        this.player.update()
+        this.Boss.update()
+        
+    }
+
+    hurtPlayer(item){
+        this.cameras.main.flash(300, 255,0,0)
+        this.player.health--
+        this.badItems.remove(item, true, true)
+        this.bounceItems.remove(item, true, true)
+        //this.updateHealth()
+        if(this.player.health<1){
+            //clearInterval(this.dropInterval)
+            clearInterval(this.player.interval)
+            console.log("your charge was: " + this.player.charge)
+            location.reload()
+            //this.scene.start("StartScene")
+            console.log("u deeeeeeaaadd!!")
+        }
+    }
+    pickupCharge(item){
+        this.chargeItems.remove(item, true, true)
+        this.player.chargeShot()
+        //this.updateScore()
+
+        var particles = this.add.particles('star');
+
+        var emitter = particles.createEmitter({
+            x: item.x,
+            y: item.y,
+            speed: 500,
+            
+            scale: { start: 0.5, end: 1 },
+        });
+
+        setTimeout(() => {
+            particles.destroy()
+        }, 1000);
+    }
+
+    public groundSmash(){
+        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+90, 1))
+        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+90, 2))
+        console.log("boem!")
+    }
+
+    public throwTrash(){
+        let i
+        if(Math.random() <0.5){
+            i = 1
+        }else{
+            i = 2
+        }
+        this.bounceItems.add(new bouncingTrash(this, this.Boss.x, this.Boss.y, i))
+    }
+
+    throwBanana(){
+        let i
+        if(Math.random() <0.5){
+            i = 1
+        }else{
+            i = 2
+        }
+        this.chargeItems.add(new throwBanana(this, this.Boss.x, this.Boss.y, i))
+    }
+
+    playerShoot(){
+        this.Boss.hurt()
+    }
 }
+
