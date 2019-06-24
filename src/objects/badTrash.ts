@@ -3,17 +3,20 @@ export class BadTrash extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x,y,beep=0) {
         super(scene, x, y, "badTrash3")
         let b = beep
-        let i = Math.random()*2
-        if(i==0){
+        let i = Math.random()*4
+        if(i<=1){
             this.setTexture("badTrash1")
         }
-        if(i==1){
+        if(i>1 && i < 2){
             this.setTexture("badTrash2")
         }
-        if(i==2){
+        if(i >= 2 && i < 3){
             this.setTexture("badTrash3")
         }
-        
+        if(i >= 3){
+            this.setTexture("badTrash3")
+        }
+
         this.scene.physics.add.existing(this)
         this.setScale(1.4)
         this.setBounce(0)

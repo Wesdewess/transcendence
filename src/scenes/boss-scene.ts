@@ -22,6 +22,8 @@ export class BossScene extends Phaser.Scene {
     private badItems: Phaser.GameObjects.Group
     private chargeItems: Phaser.GameObjects.Group
     public bounceItems: Phaser.GameObjects.Group
+    scoreText
+    healthText
 
     constructor() {
         super({key: "BossScene"})
@@ -39,7 +41,9 @@ export class BossScene extends Phaser.Scene {
     }
 
     create(): void {
-        this.add.image(0, 0, 'sky').setOrigin(0, 0)
+        this.scoreText = this.add.group();
+        this.healthText = this.add.group();
+        this.add.image(0, 0, 'bosslvl').setOrigin(0, 0)
         
         this.player = new Player(this,400,100)
         this.player.setScale(1.5)
@@ -75,6 +79,8 @@ export class BossScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player)
         //this.cameras.main.shake(100)
 
+        this.updateHealth()
+        this.updateScore()
     }
 
     update(){
@@ -88,7 +94,7 @@ export class BossScene extends Phaser.Scene {
         this.player.health--
         this.badItems.remove(item, true, true)
         this.bounceItems.remove(item, true, true)
-        //this.updateHealth()
+        this.updateHealth()
         if(this.player.health<1){
             //clearInterval(this.dropInterval)
             clearInterval(this.player.interval)
@@ -101,7 +107,7 @@ export class BossScene extends Phaser.Scene {
     pickupCharge(item){
         this.chargeItems.remove(item, true, true)
         this.player.chargeShot()
-        //this.updateScore()
+        this.updateScore()
 
         var particles = this.add.particles('star');
 
@@ -116,6 +122,39 @@ export class BossScene extends Phaser.Scene {
         setTimeout(() => {
             particles.destroy()
         }, 1000);
+    }
+
+    updateScore(){
+        try{
+            
+            this.scoreText.clear(true)
+            
+        }catch(e){
+
+        }
+        for(let i = 0; i < this.player.maxShotcharge; i+=10){
+            this.scoreText.create(1200+i*4, 100,'greyBanana').setScale(2)
+        }
+        for(let i = 0; i < this.player.shotCharge; i+=10){
+            this.scoreText.create(1200+i*4, 100,'goldenBanana').setScale(2)
+        }
+        
+        //this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge + '/'+ this.player.maxCharge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+    }
+    updateHealth(){
+        try{
+                
+            this.healthText.clear(true)
+            
+        }catch(e){
+
+        }
+        for(let i = 0; i < this.player.maxHealth; i++){
+            this.healthText.create(100+i*80, 100,'HP_empty').setScale(0.7)
+        }
+        for(let i = 0; i < this.player.health; i++){
+            this.healthText.create(100+i*80, 100,'HP').setScale(0.7)
+        }
     }
 
     public groundSmash(){
@@ -146,6 +185,7 @@ export class BossScene extends Phaser.Scene {
 
     playerShoot(){
         this.Boss.hurt()
+        this.updateScore()
     }
 }
 

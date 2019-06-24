@@ -8,7 +8,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     shotCharging: boolean
     charge = 0
     shotCharge = 0
-    maxCharge = 20
+    maxCharge = 50
     maxShotcharge = 30
     maxInterval = 200
     lastChargePress: integer
@@ -16,7 +16,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     spacebar
     d: number
     interval
-    health=3
+    maxHealth = 3
+    health= this.maxHealth
     chargeText
     jumpCharge
     protected scene
@@ -180,5 +181,5 @@ private createParticles(){
     }
 
    
-}
+
 

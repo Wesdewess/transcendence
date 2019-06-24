@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene {
     private chargeItems: Phaser.GameObjects.Group
     private bounceItems: Phaser.GameObjects.Group
     private stars: Phaser.Physics.Arcade.Group
-    scoreText
+    scoreText 
     levels = [4990,4420,3780,3120]
     currentLevel = 0
     public currentHeight = this.levels[0]
@@ -58,7 +58,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
-        
+        this.scoreText = this.add.group();
+        this.healthText = this.add.group();
         this.platforms = this.add.group({ runChildUpdate: true })
         this.badItems = this.add.group({runChildUpdate: true})
         this.chargeItems = this.add.group({runChildUpdate: true})
@@ -220,19 +221,35 @@ export class GameScene extends Phaser.Scene {
 
     updateScore(){
         try{
-        this.scoreText.destroy()
+            
+                this.scoreText.clear(true)
+            
         }catch(e){
 
         }
-        this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge + '/'+ this.player.maxCharge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+        for(let i = 0; i < this.player.maxCharge; i+=10){
+            this.scoreText.create(1200+i*4, this.currentHeight-640,'greyBanana').setScale(2)
+        }
+        for(let i = 0; i < this.player.charge; i+=10){
+            this.scoreText.create(1200+i*4, this.currentHeight-640,'goldenBanana').setScale(2)
+        }
+        
+        //this.scoreText = this.add.text(1300, this.currentHeight-640, ''+this.player.charge + '/'+ this.player.maxCharge, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
     }
     updateHealth(){
         try{
-            this.healthText.destroy()
-            }catch(e){
-    
-            }
-            this.healthText = this.add.text(150, this.currentHeight-640, ''+this.player.health, { fontFamily: 'Arial Black', fontSize: 70, color: '#2ac9be' }).setOrigin(0.5).setStroke('#7df2ea', 16)
+                
+            this.healthText.clear(true)
+            
+        }catch(e){
+
+        }
+        for(let i = 0; i < this.player.maxHealth; i++){
+            this.healthText.create(100+i*80, this.currentHeight-640,'HP_empty').setScale(0.7)
+        }
+        for(let i = 0; i < this.player.health; i++){
+            this.healthText.create(100+i*80, this.currentHeight-640,'HP').setScale(0.7)
+        }
     }
 
     dropTrash(){
