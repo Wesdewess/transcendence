@@ -25,6 +25,7 @@ export class BossScene extends Phaser.Scene {
     scoreText
     healthText
     bossHealthText
+    emitter
 
     constructor() {
         super({key: "BossScene"})
@@ -81,6 +82,8 @@ export class BossScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player)
         //this.cameras.main.shake(100)
 
+        
+
         this.updateHealth()
         this.updateScore()
         this.updateBossHealth()
@@ -126,7 +129,6 @@ export class BossScene extends Phaser.Scene {
         }
         for(let i = 0; i < this.player.shotCharge; i+=10){
             if(i == this.player.shotCharge-10){
-                console.log("sparkle!!!!")
                 var particles = this.add.particles('star');
 
                 var emitter = particles.createEmitter({
@@ -172,6 +174,21 @@ export class BossScene extends Phaser.Scene {
         }
         if(this.Boss.health == this.Boss.maxHealth){
             this.bossHealthText.create(720, 100,'bh0')
+        }else{
+            var particles = this.add.particles('heart');
+
+                var emitter = particles.createEmitter({
+                    x: 720,
+                    y: 100,
+                    speed: 200,
+                    maxParticles: 10,
+                    
+                    scale: { start: 0.5, end: 0.6 },
+                });
+
+                setTimeout(() => {
+                    particles.destroy()
+                }, 1000);
         }
         if(this.Boss.health == this.Boss.maxHealth-1){
             this.bossHealthText.create(720, 100,'bh1')
@@ -185,6 +202,7 @@ export class BossScene extends Phaser.Scene {
         if(this.Boss.health == this.Boss.maxHealth-4){
             this.bossHealthText.create(720, 100,'bh4')
         }
+        
         
     }
 

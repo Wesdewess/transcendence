@@ -32,6 +32,7 @@ export class BootScene extends Phaser.Scene {
         this.load.image('bh3', require('../assets/bh3.png'))
         this.load.image('bh4', require('../assets/bh4.png'))
         this.load.image('boss', require('../assets/Gemene_man.png'))
+        this.load.image('heart', require('../assets/Vuilniszak.png'))
         this.load.image('bosslvl', require('../assets/Boss_lvl.png'))
         this.load.image('spark', 'assets/star.png');//particle
 
@@ -39,7 +40,7 @@ export class BootScene extends Phaser.Scene {
             console.log("everything is loaded")
             // add code here to switch to the start scene
             
-            this.scene.start("BossScene")
+            this.scene.start("StartScene")
         })
     }
 }
