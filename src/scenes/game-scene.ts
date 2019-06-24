@@ -175,9 +175,9 @@ export class GameScene extends Phaser.Scene {
         
         if(this.player.charging && this.hasDestroyed == false){
             clearInterval(this.dropInterval)
-            this.badItems.clear()
-            this.chargeItems.clear()
-            this.bounceItems.clear()
+            this.badItems.clear(true)
+            this.chargeItems.clear(true)
+            this.bounceItems.clear(true)
             this.hasDestroyed = true
             console.log("remaining items destroyed")
             this.currentLevel++
@@ -231,6 +231,22 @@ export class GameScene extends Phaser.Scene {
             this.scoreText.create(1200+i*4, this.currentHeight-640,'greyBanana').setScale(2)
         }
         for(let i = 0; i < this.player.charge; i+=10){
+            if(i == this.player.charge-10 && i != this.player.maxCharge-10){
+                console.log("sparkle!!!!")
+                var particles = this.add.particles('star');
+
+                var emitter = particles.createEmitter({
+                    x: 1200+i*4,
+                    y: this.currentHeight-640,
+                    speed: 500,
+                    
+                    scale: { start: 0.5, end: 1 },
+                });
+
+                setTimeout(() => {
+                    particles.destroy()
+                }, 1000);
+            }
             this.scoreText.create(1200+i*4, this.currentHeight-640,'goldenBanana').setScale(2)
         }
         
@@ -285,18 +301,6 @@ export class GameScene extends Phaser.Scene {
         this.player.pickUpCharge()
         this.updateScore()
 
-        var particles = this.add.particles('star');
-
-        var emitter = particles.createEmitter({
-            x: item.x,
-            y: item.y,
-            speed: 500,
-            
-            scale: { start: 0.5, end: 1 },
-        });
-
-        setTimeout(() => {
-            particles.destroy()
-        }, 1000);
+        
     }
 }

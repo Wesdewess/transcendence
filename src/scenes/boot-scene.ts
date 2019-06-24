@@ -25,6 +25,12 @@ export class BootScene extends Phaser.Scene {
         this.load.image('badTrash3', require('../assets/Bleach.png'))
         this.load.image('HP', require('../assets/hp.png'))
         this.load.image('HP_empty', require('../assets/hp_leeg.png'))
+        this.load.image('vuilniszak2', require('../assets/Vuilniszak2.png'))
+        this.load.image('bh0', require('../assets/bh0.png'))
+        this.load.image('bh1', require('../assets/bh1.png'))
+        this.load.image('bh2', require('../assets/bh2.png'))
+        this.load.image('bh3', require('../assets/bh3.png'))
+        this.load.image('bh4', require('../assets/bh4.png'))
         this.load.image('boss', require('../assets/Gemene_man.png'))
         this.load.image('bosslvl', require('../assets/Boss_lvl.png'))
         this.load.image('spark', 'assets/star.png');//particle

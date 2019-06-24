@@ -8,7 +8,8 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
     private lastDirectionChange = new Date().getTime()
     private lastThrow = new Date().getTime()
     protected scene
-    public health = 3
+    public maxHealth = 3
+    public health = this.maxHealth
     constructor(scene, y, x = window.innerWidth/2) {
         super(scene, x, y, "boss")
         this.scene = scene
@@ -117,6 +118,7 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
         if(this.health<1){
             this.scene.scene.start("EndScene")
         }
+        this.scene.updateBossHealth()
     }
 
 }

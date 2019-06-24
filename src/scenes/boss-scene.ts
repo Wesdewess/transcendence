@@ -24,6 +24,7 @@ export class BossScene extends Phaser.Scene {
     public bounceItems: Phaser.GameObjects.Group
     scoreText
     healthText
+    bossHealthText
 
     constructor() {
         super({key: "BossScene"})
@@ -43,6 +44,7 @@ export class BossScene extends Phaser.Scene {
     create(): void {
         this.scoreText = this.add.group();
         this.healthText = this.add.group();
+        this.bossHealthText = this.add.group();
         this.add.image(0, 0, 'bosslvl').setOrigin(0, 0)
         
         this.player = new Player(this,400,100)
@@ -68,7 +70,7 @@ export class BossScene extends Phaser.Scene {
         this.chargeItems = this.add.group({runChildUpdate: true})
         this.badItems = this.add.group({runChildUpdate: true})
         this.bounceItems = this.add.group({runChildUpdate: true})
-        this.physics.add.collider(this.bounceItems, this.player)
+        //this.physics.add.collider(this.bounceItems, this.player)
         this.physics.add.collider(this.bounceItems, this.platforms)
         this.physics.add.overlap(this.badItems, this.player, this.hurtPlayer, null, this)
         this.physics.add.overlap(this.bounceItems, this.player, this.hurtPlayer, null, this)
@@ -81,6 +83,7 @@ export class BossScene extends Phaser.Scene {
 
         this.updateHealth()
         this.updateScore()
+        this.updateBossHealth()
     }
 
     update(){
@@ -108,20 +111,6 @@ export class BossScene extends Phaser.Scene {
         this.chargeItems.remove(item, true, true)
         this.player.chargeShot()
         this.updateScore()
-
-        var particles = this.add.particles('star');
-
-        var emitter = particles.createEmitter({
-            x: item.x,
-            y: item.y,
-            speed: 500,
-            
-            scale: { start: 0.5, end: 1 },
-        });
-
-        setTimeout(() => {
-            particles.destroy()
-        }, 1000);
     }
 
     updateScore(){
@@ -136,6 +125,22 @@ export class BossScene extends Phaser.Scene {
             this.scoreText.create(1200+i*4, 100,'greyBanana').setScale(2)
         }
         for(let i = 0; i < this.player.shotCharge; i+=10){
+            if(i == this.player.shotCharge-10){
+                console.log("sparkle!!!!")
+                var particles = this.add.particles('star');
+
+                var emitter = particles.createEmitter({
+                    x: 1200+i*4,
+                    y: 100,
+                    speed: 500,
+                    
+                    scale: { start: 0.5, end: 1 },
+                });
+
+                setTimeout(() => {
+                    particles.destroy()
+                }, 1000);
+            }
             this.scoreText.create(1200+i*4, 100,'goldenBanana').setScale(2)
         }
         
@@ -157,9 +162,35 @@ export class BossScene extends Phaser.Scene {
         }
     }
 
+    updateBossHealth(){
+        try{
+                
+            this.bossHealthText.clear(true)
+            
+        }catch(e){
+
+        }
+        if(this.Boss.health == this.Boss.maxHealth){
+            this.bossHealthText.create(720, 100,'bh0')
+        }
+        if(this.Boss.health == this.Boss.maxHealth-1){
+            this.bossHealthText.create(720, 100,'bh1')
+        }
+        if(this.Boss.health == this.Boss.maxHealth-2){
+            this.bossHealthText.create(720, 100,'bh2')
+        }
+        if(this.Boss.health == this.Boss.maxHealth-3){
+            this.bossHealthText.create(720, 100,'bh3')
+        }
+        if(this.Boss.health == this.Boss.maxHealth-4){
+            this.bossHealthText.create(720, 100,'bh4')
+        }
+        
+    }
+
     public groundSmash(){
-        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+90, 1))
-        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+90, 2))
+        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+55, 1))
+        this.badItems.add(new BadTrash(this, this.Boss.x, this.Boss.y+55, 2))
         console.log("boem!")
     }
 
