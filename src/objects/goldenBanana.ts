@@ -11,5 +11,8 @@ export class goldenBanana extends Phaser.Physics.Arcade.Sprite {
         this.setGravityY(-2950)
         console.log("placed golden banana")
         
+        setTimeout(()=>{
+            this.destroy()
+        },10000)
     }
 }

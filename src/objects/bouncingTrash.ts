@@ -39,5 +39,8 @@ export class bouncingTrash extends Phaser.Physics.Arcade.Sprite {
         }
         console.log("placed bouncing trash")
         
+        setTimeout(()=>{
+            this.destroy()
+        },10000)
     }
 }

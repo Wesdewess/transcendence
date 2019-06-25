@@ -41,5 +41,9 @@ export class BadTrash extends Phaser.Physics.Arcade.Sprite {
             //console.log("2")
         }
         console.log("placed bad trash")
+
+        setTimeout(()=>{
+            this.destroy()
+        },10000)
     }
 }

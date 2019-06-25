@@ -50,6 +50,7 @@ export class BossScene extends Phaser.Scene {
         
         this.player = new Player(this,400,100)
         this.player.setScale(1.5)
+        this.player.maxHealth = this.player.health = 5
         this.Boss = new Boss(this, 100,1000)
         this.platforms = this.add.group({ runChildUpdate: true })
         this.platforms.addMultiple([
@@ -72,8 +73,9 @@ export class BossScene extends Phaser.Scene {
         this.badItems = this.add.group({runChildUpdate: true})
         this.bounceItems = this.add.group({runChildUpdate: true})
         //this.physics.add.collider(this.bounceItems, this.player)
-        this.physics.add.collider(this.bounceItems, this.platforms)
+        //this.physics.add.collider(this.bounceItems, this.platforms)
         this.physics.add.overlap(this.badItems, this.player, this.hurtPlayer, null, this)
+        this.physics.add.overlap(this.Boss, this.player, this.hurtPlayer, null, this)
         this.physics.add.overlap(this.bounceItems, this.player, this.hurtPlayer, null, this)
         this.physics.add.overlap(this.chargeItems, this.player, this.pickupCharge, null, this)
 
@@ -96,18 +98,37 @@ export class BossScene extends Phaser.Scene {
     }
 
     hurtPlayer(item){
-        this.cameras.main.flash(300, 255,0,0)
-        this.player.health--
-        this.badItems.remove(item, true, true)
-        this.bounceItems.remove(item, true, true)
-        this.updateHealth()
-        if(this.player.health<1){
-            //clearInterval(this.dropInterval)
-            clearInterval(this.player.interval)
-            console.log("your charge was: " + this.player.charge)
-            location.reload()
-            //this.scene.start("StartScene")
-            console.log("u deeeeeeaaadd!!")
+
+        if(this.player.lastHurt+3000<new Date().getTime()){
+            this.player.lastHurt = new Date().getTime()
+            this.cameras.main.flash(300, 255,0,0)
+            this.player.health--
+            this.badItems.remove(item, true, true)
+            this.bounceItems.remove(item, true, true)
+            this.updateHealth()
+            if(this.player.health<1){
+                //clearInterval(this.dropInterval)
+                clearInterval(this.player.interval)
+                console.log("your charge was: " + this.player.charge)
+                location.reload()
+                //this.scene.start("StartScene")
+                console.log("u deeeeeeaaadd!!")
+            }
+
+            
+            let i = setInterval(()=>{
+                if(this.player.flash%2 == 0){
+                    this.player.setVisible(false)
+                }else{
+                    this.player.setVisible(true)
+                } 
+                this.player.flash++
+                if(this.player.flash==20){
+                    this.player.flash=0
+                    clearInterval(i)
+                }
+            },100)
+           
         }
     }
     pickupCharge(item){
@@ -157,10 +178,10 @@ export class BossScene extends Phaser.Scene {
 
         }
         for(let i = 0; i < this.player.maxHealth; i++){
-            this.healthText.create(100+i*80, 100,'HP_empty').setScale(0.7)
+            this.healthText.create(100+i*80, 100,'HP_empty').setScale(2.6)
         }
         for(let i = 0; i < this.player.health; i++){
-            this.healthText.create(100+i*80, 100,'HP').setScale(0.7)
+            this.healthText.create(100+i*80, 100,'HP').setScale(2.6)
         }
     }
 

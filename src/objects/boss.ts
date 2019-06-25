@@ -10,6 +10,8 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
     protected scene
     public maxHealth = 3
     public health = this.maxHealth
+    private shakeSide = 1
+
     constructor(scene, y, x = window.innerWidth/2) {
         super(scene, x, y, "boss")
         this.scene = scene
@@ -64,38 +66,39 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
 
     jump(){
         if (this.body.touching.down) {
-
-            var particles = this.scene.add.particles('star');
-
-        var emitter = particles.createEmitter({
-            x: this.x,
-            y: this.y+70,
-            speed: 500,
-            
-            scale: { start: 0.5, end: 1 },
-        });
-
-        setTimeout(() => {
-            particles.destroy()
-        }, 1000);
-
-        setTimeout(() => {
-            let d = new Date().getTime()
-            this.setVelocityY(-1300)
-            this.interval = setInterval(()=>{
-                let t = new Date().getTime()
-                if(this.body.touching.down  && t > d+100){
-                    this.scene.cameras.main.shake(200)
-                    this.groundSmash()
-                    clearInterval(this.interval)
-                    
+            let shake = setInterval( ()=>{
+                if(this.shakeSide<33){
+                    if(this.shakeSide%2 == 0){
+                        this.setPosition(this.x+15, this.y)
+                        this.shakeSide++
+                    }else{
+                        this.setPosition(this.x-15, this.y)
+                        this.shakeSide++
+                    }
+                }else{
+                    this.shakeSide = 0
+                    clearInterval(shake)
                 }
-            },10)
+            }, 30)
+        }
+
+            setTimeout(() => {
+                let d = new Date().getTime()
+                this.setVelocityY(-1300)
+                this.interval = setInterval(()=>{
+                    let t = new Date().getTime()
+                    if(this.body.touching.down  && t > d+100){
+                        this.scene.cameras.main.shake(200)
+                        this.groundSmash()
+                        clearInterval(this.interval)
+                        
+                    }
+                },10)
         }, 1000);
             
             
         }
-    }
+    
 
     attack(){
         let d = new Date().getTime()
@@ -119,6 +122,7 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
             this.scene.scene.start("EndScene")
         }
         this.scene.updateBossHealth()
+        
     }
 
 }

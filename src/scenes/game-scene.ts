@@ -261,10 +261,10 @@ export class GameScene extends Phaser.Scene {
 
         }
         for(let i = 0; i < this.player.maxHealth; i++){
-            this.healthText.create(100+i*80, this.currentHeight-640,'HP_empty').setScale(0.7)
+            this.healthText.create(100+i*80, this.currentHeight-640,'HP_empty').setScale(2.6)
         }
         for(let i = 0; i < this.player.health; i++){
-            this.healthText.create(100+i*80, this.currentHeight-640,'HP').setScale(0.7)
+            this.healthText.create(100+i*80, this.currentHeight-640,'HP').setScale(2.6)
         }
     }
 
@@ -282,19 +282,35 @@ export class GameScene extends Phaser.Scene {
         }
     }
     hurtPlayer(item){
-        this.cameras.main.flash(300, 255,0,0)
-        this.player.health--
-        this.badItems.remove(item, true, true)
-        this.bounceItems.remove(item, true, true)
-        this.updateHealth()
-        if(this.player.health<1){
-            clearInterval(this.dropInterval)
-            clearInterval(this.player.interval)
-            console.log("your charge was: " + this.player.charge)
-            location.reload()
-            //this.scene.start("StartScene")
-            console.log("u deeeeeeaaadd!!")
-        }
+        if(this.player.lastHurt+3000<new Date().getTime()){
+            this.player.lastHurt = new Date().getTime()
+            this.cameras.main.flash(300, 255,0,0)
+            this.player.health--
+            this.badItems.remove(item, true, true)
+            this.bounceItems.remove(item, true, true)
+            this.updateHealth()
+            if(this.player.health<1){
+                clearInterval(this.dropInterval)
+                clearInterval(this.player.interval)
+                console.log("your charge was: " + this.player.charge)
+                location.reload()
+                //this.scene.start("StartScene")
+                console.log("u deeeeeeaaadd!!")
+            }
+        
+        let i = setInterval(()=>{
+            if(this.player.flash%2 == 0){
+                this.player.setVisible(false)
+            }else{
+                this.player.setVisible(true)
+            } 
+            this.player.flash++
+            if(this.player.flash==20){
+                this.player.flash=0
+                clearInterval(i)
+            }
+        },100)
+    }
     }
     pickupCharge(item){
         this.chargeItems.remove(item, true, true)

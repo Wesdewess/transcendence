@@ -31,7 +31,7 @@ export class StartScene extends Phaser.Scene {
         this.add.text(720, 400, 'Click to start', { fontFamily: 'Arial Black', fontSize: 80, color: '#89801b' }).setOrigin(0.5).setStroke('#bece12', 10)
 
         // add code here to switch to the GameScene, after a mouse click
-        this.input.once('pointerdown', ()=> {this.scene.start("BossScene")})
+        this.input.once('pointerdown', ()=> {this.scene.start("GameScene")})
         
     }
     

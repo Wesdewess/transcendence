@@ -21,6 +21,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     chargeText
     jumpCharge
     protected scene
+    public lastHurt = new Date().getTime()
+    public flash = 0
     
 
     constructor(scene, y, x = window.innerWidth/2) {
