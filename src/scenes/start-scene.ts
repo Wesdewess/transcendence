@@ -9,11 +9,39 @@ export class StartScene extends Phaser.Scene {
     private arcade : Arcade
     private joystickListener: EventListener
     joystick: Joystick
+    interval
 
     constructor() {
         super({key: "StartScene"})
         this.bootscene = new BootScene
         this.bootscene.arcade = new Arcade(this)
+        this.interval = setInterval(()=>{
+            
+            for(let joystick of this.bootscene.arcade.Joysticks){
+                joystick.update()
+                console.log('checking')
+                // example: read directions as true / false
+                if(joystick.Left){
+                    console.log("found")
+                    clearInterval(this.interval)
+                    this.scene.start("GameScene")
+                }
+                if(joystick.Right){
+                    clearInterval(this.interval)
+                    this.scene.start("EndScene")
+                }
+                if(joystick.Up){
+                    clearInterval(this.interval)
+                    this.scene.start("BossScene")
+                }
+                if (joystick.Down ) 
+                    {
+                        clearInterval(this.interval)
+                        this.scene.start("GameScene")
+                    }
+                
+            }
+        },20)
     }
     //     // The game must wait for de joysticks to connect
     //     this.bootscene.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
@@ -57,11 +85,15 @@ export class StartScene extends Phaser.Scene {
         this.add.image(200, 770, 'badTrash2').setScale(3)
         this.add.image(300, 770, 'badTrash3').setScale(3)
         this.add.image(400, 770, 'vuilniszak2').setScale(0.9)
+        this.add.image(920, 670, 'controls').setScale(0.6)
 
         this.add.text(720, 400, 'Click to start', { fontFamily: 'Arial Black', fontSize: 80, color: '#89801b' }).setOrigin(0.5).setStroke('#bece12', 10)
 
         // add code here to switch to the GameScene, after a mouse click
-        //this.input.once(, ()=> {this.scene.start("GameScene")})
+        this.input.once('pointerdown', ()=> {
+            clearInterval(this.interval)
+            this.scene.start("GameScene")
+        })
         
     }
 

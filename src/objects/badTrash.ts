@@ -27,7 +27,7 @@ export class BadTrash extends Phaser.Physics.Arcade.Sprite {
             this.setGravityY(-2900)
         }else{
             this.setGravityY(-3000)
-            this.setTexture("vuilniszak2").setScale(0.9)
+            this.setTexture("barrel").setScale(0.5)
         }
         console.log(beep + " ")
         if(beep==1){
@@ -46,6 +46,6 @@ export class BadTrash extends Phaser.Physics.Arcade.Sprite {
             this.destroy()
         },10000)
 
-        this.body.setSize(this.width/10*9,this.height/10*9)
+        this.body.setSize(this.width/10*7,this.height/10*7).setOffset(0,this.height/10*3)
     }
 }

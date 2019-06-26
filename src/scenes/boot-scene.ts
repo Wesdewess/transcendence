@@ -42,13 +42,16 @@ export class BootScene extends Phaser.Scene {
         this.load.image('boss', require('../assets/Gemene_man.png'))
         this.load.image('heart', require('../assets/Vuilniszak.png'))
         this.load.image('bosslvl', require('../assets/Boss_lvl.png'))
+        this.load.image('controls', require('../assets/Controls.png'))
+        this.load.image('barrel', require('../assets/ACID.png'))
+        this.load.image('victory', require('../assets/win_screen.png'))
         this.load.image('spark', 'assets/star.png');//particle
 
         this.load.on('complete', () => {
             console.log("everything is loaded")
             // add code here to switch to the start scene
             
-            this.scene.start("GameScene")
+            this.scene.start("StartScene")
         })
     }
 }

@@ -29,7 +29,7 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
             }
         },10)
 
-        this.body.setSize(this.width/10*8,this.height/10*8).setOffset(this.width/10*2,this.height/10*2)
+        this.body.setSize(this.width/10*4,this.height/10*4).setOffset(this.width/10*3,this.height/10*6)
     }
 
     create(){
