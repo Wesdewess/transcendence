@@ -3,7 +3,7 @@ import { delay } from "q";
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     
-    private cursors: Phaser.Input.Keyboard.CursorKeys
+    public cursors: Phaser.Input.Keyboard.CursorKeys
     charging: boolean
     shotCharging: boolean
     charge = 0
@@ -90,15 +90,15 @@ private createParticles(){
         if (this.cursors.up.isDown) {
             this.jump()
         }
-        if (this.cursors.down.isDown) {
-            this.down()
-            this.setTexture('playerHidden')
-            this.body.setSize(67,90).setOffset(0,47)
+        // if (this.cursors.down.isDown) {
+        //     this.down()
+        //     this.setTexture('playerHidden')
+        //     this.body.setSize(67,90).setOffset(0,47)
             
-        }else{
-            this.body.setSize(67,137)//.setOffset(0,0)
-            this.setTexture('bmo')//.setOffset(0,0).setCrop(0,0,this.width,this.height)
-        }
+        // }else{
+        //     this.body.setSize(67,137)//.setOffset(0,0)
+        //     this.setTexture('bmo')//.setOffset(0,0).setCrop(0,0,this.width,this.height)
+        // }
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
             this.chargeJump()
         }

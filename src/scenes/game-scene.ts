@@ -196,7 +196,7 @@ export class GameScene extends Phaser.Scene {
             if(joystick.Left)  this.player.left()
             if(joystick.Right) this.player.right()
             if(joystick.Up)    this.player.up()
-            if (joystick.Down) {
+            if (joystick.Down || this.player.cursors.down.isDown) {
                 this.player.down()
                 this.player.setTexture('playerHidden')
                 this.player.body.setSize(67,90).setOffset(0,47)
