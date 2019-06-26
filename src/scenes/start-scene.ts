@@ -5,13 +5,14 @@ import {Joystick} from "../objects/arcade/input/joystick"
 
 export class StartScene extends Phaser.Scene {
     bootscene
+    private cursors: Phaser.Input.Keyboard.CursorKeys
     private arcade : Arcade
     private joystickListener: EventListener
     joystick: Joystick
 
     constructor() {
         super({key: "StartScene"})
-    
+        this.cursors = this.scene.input.keyboard.createCursorKeys()
         this.bootscene = new BootScene
         this.bootscene.arcade = new Arcade(this)
         // The game must wait for de joysticks to connect
@@ -61,16 +62,17 @@ export class StartScene extends Phaser.Scene {
 
         // add code here to switch to the GameScene, after a mouse click
         this.input.once('pointerdown', ()=> {this.scene.start("GameScene")})
+        let interval = setInterval(()=>{
+            if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
+                clearInterval(interval)
+                this.scene.start("GameScene")
+            }
+        },20)
         
     }
 
     update(){
-        for(let joystick of this.bootscene.arcade.Joysticks){
-            joystick.update()
-            // example: read directions as true / false
-            if(joystick.Left)  this.scene.start("GameScene")
-            if(joystick.Right) this.scene.start("GameScene")
-            if(joystick.Up)    this.scene.start("GameScene")
-    }
+        
+}
     
 }
