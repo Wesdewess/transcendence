@@ -11,6 +11,7 @@ import { BadTrash } from "../objects/badTrash";
 import { throwBanana } from "../objects/throwBanana";
 import { bouncingTrash } from "../objects/bouncingTrash";
 import { all } from "q";
+import { BootScene } from "../scenes/boot-scene"
 
 export class BossScene extends Phaser.Scene {
     private arcade : Arcade
@@ -26,11 +27,31 @@ export class BossScene extends Phaser.Scene {
     healthText
     bossHealthText
     emitter
+    bootscene
+    
 
     constructor() {
         super({key: "BossScene"})
         console.log("loading boss scene")
         
+        
+        this.bootscene = new BootScene
+        this.bootscene.arcade = new Arcade(this)
+        
+        // The game must wait for de joysticks to connect
+        this.bootscene.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
+        document.addEventListener("joystickcreated",  this.bootscene.joystickListener)
+        
+    }
+    
+    private initJoystick(e:CustomEvent) {
+
+        let joystick = this.bootscene.arcade.Joysticks[e.detail]
+       
+        document.addEventListener(joystick.ButtonEvents[0], () => this.player.jump())
+        document.addEventListener(joystick.ButtonEvents[1], () => this.player.chargeJump())
+        // alternatively you can handle single buttons
+        // Handle button 0 (this is the first button, X-Button on a PS4 controller)
         
     }
 
@@ -94,6 +115,24 @@ export class BossScene extends Phaser.Scene {
     update(){
         this.player.update()
         this.Boss.update()
+
+        for(let joystick of this.bootscene.arcade.Joysticks){
+            joystick.update()
+            // example: read directions as true / false
+            if(joystick.Left)  this.player.left()
+            if(joystick.Right) this.player.right()
+            if(joystick.Up)    this.player.up()
+            if (joystick.Down) {
+                this.player.down()
+                this.player.setTexture('playerHidden')
+                this.player.body.setSize(67,90).setOffset(0,47)
+                
+            }else{
+                this.player.body.setSize(67,137)//.setOffset(0,0)
+                this.player.setTexture('bmo')//.setOffset(0,0).setCrop(0,0,this.width,this.height)
+            }
+            
+        }
         
     }
 

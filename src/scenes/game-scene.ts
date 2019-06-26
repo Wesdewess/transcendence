@@ -10,40 +10,43 @@ import { BadTrash } from "../objects/badTrash";
 import { goldenBanana } from "../objects/goldenBanana";
 import { bouncingTrash } from "../objects/bouncingTrash";
 import { all } from "q";
+import { BootScene } from "../scenes/boot-scene"
 
 export class GameScene extends Phaser.Scene {
-    private arcade : Arcade
-    private joystickListener: EventListener
-    joystick: Joystick
+    // private arcade : Arcade
+    // private joystickListener: EventListener
+    // joystick: Joystick
     private player : Player
     private platforms: Phaser.GameObjects.Group
     private badItems: Phaser.GameObjects.Group
     private chargeItems: Phaser.GameObjects.Group
     private bounceItems: Phaser.GameObjects.Group
-    private stars: Phaser.Physics.Arcade.Group
-    scoreText 
-    levels = [4990,4420,3780,3120]
-    currentLevel = 0
+    //private stars: Phaser.Physics.Arcade.Group
+    private scoreText 
+    private levels = [4990,4420,3780,3120]
+    private currentLevel = 0
     public currentHeight = this.levels[0]
-    dropInterval
-    hasDestroyed = false
-    healthText
+    private dropInterval
+    private hasDestroyed = false
+    private healthText
     private blocker
+    private bootscene
 
     constructor() {
         super({ key: "GameScene" })
         // create arcade cabinet with 2 joysticks (with 6 buttons)
-        this.arcade = new Arcade(this)
+        this.bootscene = new BootScene
+        this.bootscene.arcade = new Arcade(this)
         
         // The game must wait for de joysticks to connect
-        this.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
-        document.addEventListener("joystickcreated",  this.joystickListener)
+        this.bootscene.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
+        document.addEventListener("joystickcreated",  this.bootscene.joystickListener)
         
     }
     
     private initJoystick(e:CustomEvent) {
 
-        let joystick = this.arcade.Joysticks[e.detail]
+        let joystick = this.bootscene.arcade.Joysticks[e.detail]
        
         document.addEventListener(joystick.ButtonEvents[0], () => this.player.jump())
         document.addEventListener(joystick.ButtonEvents[1], () => this.player.chargeJump())
@@ -169,14 +172,6 @@ export class GameScene extends Phaser.Scene {
         
     }
 
-    private collectStar(player : Player , star) : void {
-        this.stars.remove(star, true, true)
-        this.registry.values.score++
-
-        // TO DO check if we have all the stars, then go to the end scene
-    
-    }
-
     update(){
         
         if(this.player.charging && this.hasDestroyed == false){
@@ -195,13 +190,21 @@ export class GameScene extends Phaser.Scene {
 
         this.player.update()
 
-        for(let joystick of this.arcade.Joysticks){
+        for(let joystick of this.bootscene.arcade.Joysticks){
             joystick.update()
             // example: read directions as true / false
             if(joystick.Left)  this.player.left()
             if(joystick.Right) this.player.right()
             if(joystick.Up)    this.player.up()
-            if(joystick.Down)  this.player.down()
+            if (joystick.Down) {
+                this.player.down()
+                this.player.setTexture('playerHidden')
+                this.player.body.setSize(67,90).setOffset(0,47)
+                
+            }else{
+                this.player.body.setSize(67,137)//.setOffset(0,0)
+                this.player.setTexture('bmo')//.setOffset(0,0).setCrop(0,0,this.width,this.height)
+            }
             
         }
 

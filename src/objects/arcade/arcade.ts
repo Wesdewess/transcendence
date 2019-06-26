@@ -1,11 +1,11 @@
 import {Joystick} from "../arcade/input/joystick"
-import {GameScene} from "../../scenes/game-scene"
+import {BootScene} from "../../scenes/boot-scene"
 export class Arcade{
     private readonly DEBUG          : boolean = false;
     private joysticks               : Joystick[]
     private readonly REDIRECT_URL   : string = "http://hr-cmgt.github.io/arcade-server"
     private multiplayer             : boolean = false
-    private game                    : GameScene
+    private game                    : BootScene
     // PROPERTIES
     public get Joysticks()          : Joystick[] { return this.joysticks }
 
@@ -13,7 +13,7 @@ export class Arcade{
      * Creates an arcade 'cabinet' 
      * @param mp 'true' for 2 joystick multiplayer Arcade (default single player)
      */
-    constructor(game: GameScene, mp:boolean = false) {
+    constructor(game: BootScene, mp:boolean = false) {
         this.game        = game
         this.multiplayer = mp
         this.joysticks   = []

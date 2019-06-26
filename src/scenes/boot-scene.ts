@@ -1,10 +1,17 @@
+import {Arcade} from "../objects/arcade/arcade"
+import {Joystick} from "../objects/arcade/input/joystick"
 
 export class BootScene extends Phaser.Scene {
-
+    public arcade : Arcade
+    public joystickListener: EventListener
+    joystick: Joystick
     private graphics: Phaser.GameObjects.Graphics
 
     constructor() {
         super({ key: "BootScene" })
+        this.arcade = new Arcade(this)
+
+        
     }
 
     init(){
