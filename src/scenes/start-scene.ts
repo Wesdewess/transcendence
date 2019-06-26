@@ -15,7 +15,33 @@ export class StartScene extends Phaser.Scene {
         super({key: "StartScene"})
         this.bootscene = new BootScene
         this.bootscene.arcade = new Arcade(this)
-        
+        this.interval = setInterval(()=>{
+            
+            for(let joystick of this.bootscene.arcade.Joysticks){
+                joystick.update()
+                console.log('checking')
+                // example: read directions as true / false
+                if(joystick.Left){
+                    console.log("found")
+                    clearInterval(this.interval)
+                    this.scene.start("GameScene")
+                }
+                if(joystick.Right){
+                    clearInterval(this.interval)
+                    this.scene.start("EndScene")
+                }
+                if(joystick.Up){
+                    clearInterval(this.interval)
+                    this.scene.start("BossScene")
+                }
+                if (joystick.Down ) 
+                    {
+                        clearInterval(this.interval)
+                        this.scene.start("GameScene")
+                    }
+                
+            }
+        },20)
     }
     //     // The game must wait for de joysticks to connect
     //     this.bootscene.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
@@ -67,33 +93,6 @@ export class StartScene extends Phaser.Scene {
         this.input.once('pointerdown', ()=> {
             clearInterval(this.interval)
             this.scene.start("GameScene")
-            this.interval = setInterval(()=>{
-            
-                for(let joystick of this.bootscene.arcade.Joysticks){
-                    joystick.update()
-                    console.log('checking')
-                    // example: read directions as true / false
-                    if(joystick.Left){
-                        console.log("found")
-                        clearInterval(this.interval)
-                        this.scene.start("GameScene")
-                    }
-                    if(joystick.Right){
-                        clearInterval(this.interval)
-                        this.scene.start("EndScene")
-                    }
-                    if(joystick.Up){
-                        clearInterval(this.interval)
-                        this.scene.start("BossScene")
-                    }
-                    if (joystick.Down ) 
-                        {
-                            clearInterval(this.interval)
-                            this.scene.start("GameScene")
-                        }
-                    
-                }
-            },20)
         })
         
     }
