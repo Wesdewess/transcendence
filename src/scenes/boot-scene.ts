@@ -48,7 +48,7 @@ export class BootScene extends Phaser.Scene {
             console.log("everything is loaded")
             // add code here to switch to the start scene
             
-            this.scene.start("StartScene")
+            this.scene.start("GameScene")
         })
     }
 }

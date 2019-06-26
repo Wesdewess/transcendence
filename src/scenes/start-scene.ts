@@ -12,7 +12,6 @@ export class StartScene extends Phaser.Scene {
 
     constructor() {
         super({key: "StartScene"})
-        this.cursors = this.scene.input.keyboard.createCursorKeys()
         this.bootscene = new BootScene
         this.bootscene.arcade = new Arcade(this)
         // The game must wait for de joysticks to connect
@@ -61,13 +60,7 @@ export class StartScene extends Phaser.Scene {
         this.add.text(720, 400, 'Click to start', { fontFamily: 'Arial Black', fontSize: 80, color: '#89801b' }).setOrigin(0.5).setStroke('#bece12', 10)
 
         // add code here to switch to the GameScene, after a mouse click
-        this.input.once('pointerdown', ()=> {this.scene.start("GameScene")})
-        let interval = setInterval(()=>{
-            if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE))) {
-                clearInterval(interval)
-                this.scene.start("GameScene")
-            }
-        },20)
+        //this.input.once(, ()=> {this.scene.start("GameScene")})
         
     }
 
