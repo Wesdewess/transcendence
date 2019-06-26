@@ -28,6 +28,7 @@ export class GameScene extends Phaser.Scene {
     dropInterval
     hasDestroyed = false
     healthText
+    private blocker
 
     constructor() {
         super({ key: "GameScene" })
@@ -61,6 +62,7 @@ export class GameScene extends Phaser.Scene {
         this.scoreText = this.add.group();
         this.healthText = this.add.group();
         this.platforms = this.add.group({ runChildUpdate: true })
+        
         this.badItems = this.add.group({runChildUpdate: true})
         this.chargeItems = this.add.group({runChildUpdate: true})
         this.bounceItems = this.add.group({runChildUpdate: true})
@@ -99,11 +101,15 @@ export class GameScene extends Phaser.Scene {
             new Platform(this, 1050, this.levels[1], 'ground', 1),
             new Platform(this, 1200, this.levels[1], 'ground', 1),
             new Platform(this, 1350, this.levels[1], 'ground', 1)
+            
         ], true)
+
+        
+
         this.add.image(0, 2000, 'sky').setOrigin(0, 0)
         this.player = new Player(this, 4800)
         this.player.setScale(1.5)
-        
+        this.blocker = new Platform(this, 720, this.levels[0]-200, 'ground', 1, false)
         this.platforms.addMultiple([
             //stage 1 floor
             new Platform(this, 0, this.levels[0], 'ground', 1),

@@ -145,7 +145,7 @@ private createParticles(){
     chargeJump(){ 
         this.d = new Date().getTime()
         if(this.charging == true){
-            
+            this.body.checkCollision.up = false
             if(this.lastChargePress + this.maxInterval > this.d && this.jumpCharge<100){
                 console.log("charging")
                 this.jumpCharge += 10
@@ -166,6 +166,7 @@ private createParticles(){
                     let t = new Date().getTime()
                     if(this.body.touching.down && t > this.d+100){
                         this.scene.cameras.main.stopFollow()
+                        this.body.checkCollision.up = true
                         clearInterval(this.interval)
                         
                     }

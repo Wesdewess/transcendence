@@ -2,7 +2,7 @@ export class Platform extends Phaser.Physics.Arcade.Sprite {
 
     private speed:number
 
-    constructor(scene, x: number, y: number, texture:string, friction:number = 1) {
+    constructor(scene, x: number, y: number, texture:string, friction:number = 1, collide = false) {
         super(scene, x, y, texture)
 
         this.scene.physics.add.existing(this)
@@ -15,7 +15,14 @@ export class Platform extends Phaser.Physics.Arcade.Sprite {
         // friction 0 to 1 (ice has low friction) // has no effecct
         this.setFrictionX(-10)
 
-        this.body.checkCollision.down = false
+        // if(collide==false){
+        //     this.body.checkCollision.down = false
+        // }else{
+        //     this.body.checkCollision.down = true
+        //     //this.body.width = 10000
+        // }
+
+
     }
 
     update(){

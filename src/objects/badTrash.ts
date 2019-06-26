@@ -45,5 +45,7 @@ export class BadTrash extends Phaser.Physics.Arcade.Sprite {
         setTimeout(()=>{
             this.destroy()
         },10000)
+
+        this.body.setSize(this.width/10*9,this.height/10*9)
     }
 }
