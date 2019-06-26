@@ -1,9 +1,38 @@
 import { callbackify } from "util";
+import { BootScene } from "../scenes/boot-scene"
+import {Arcade} from "../objects/arcade/arcade"
+import {Joystick} from "../objects/arcade/input/joystick"
 
 export class StartScene extends Phaser.Scene {
+    bootscene
+    private arcade : Arcade
+    private joystickListener: EventListener
+    joystick: Joystick
 
     constructor() {
         super({key: "StartScene"})
+    
+        this.bootscene = new BootScene
+        this.bootscene.arcade = new Arcade(this)
+        // The game must wait for de joysticks to connect
+        this.bootscene.joystickListener = (e: Event) => this.initJoystick(e as CustomEvent)
+        document.addEventListener("joystickcreated",  this.bootscene.joystickListener)
+        
+    }
+    
+    private initJoystick(e:CustomEvent) {
+
+        let joystick = this.bootscene.arcade.Joysticks[e.detail]
+       
+        document.addEventListener(joystick.ButtonEvents[0], () => this.scene.start("GameScene"))
+        document.addEventListener(joystick.ButtonEvents[1], () => this.scene.start("GameScene"))
+        document.addEventListener(joystick.ButtonEvents[2], () => this.scene.start("GameScene"))
+        document.addEventListener(joystick.ButtonEvents[3], () => this.scene.start("GameScene"))
+        document.addEventListener(joystick.ButtonEvents[4], () => this.scene.start("GameScene"))
+        document.addEventListener(joystick.ButtonEvents[5], () => this.scene.start("GameScene"))
+        // alternatively you can handle single buttons
+        // Handle button 0 (this is the first button, X-Button on a PS4 controller)
+        
     }
 
     init(): void {
@@ -33,6 +62,15 @@ export class StartScene extends Phaser.Scene {
         // add code here to switch to the GameScene, after a mouse click
         this.input.once('pointerdown', ()=> {this.scene.start("GameScene")})
         
+    }
+
+    update(){
+        for(let joystick of this.bootscene.arcade.Joysticks){
+            joystick.update()
+            // example: read directions as true / false
+            if(joystick.Left)  this.scene.start("GameScene")
+            if(joystick.Right) this.scene.start("GameScene")
+            if(joystick.Up)    this.scene.start("GameScene")
     }
     
 }
